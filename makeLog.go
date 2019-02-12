@@ -154,32 +154,46 @@ func selectLog(db *sql.DB, tID string) []Log {
 	return logs
 }
 
-func searchLIDs(db *sql.DB, logs []Log) []int {
-	LIDs := []int{}
-	for _, log := range logs {
-		// idでlogを検索する
-		que := fmt.Sprintf(`
-        SELECT start_log_ids, end_log_ids
-        FROM question
-        WHERE start_log_ids like %s OR end_log_ids like %s
-		`, log.LID, log.LID)
-		row := db.QueryRow(que)
-
-		// 空ならcontinue
-		// 空じゃないならリストに保持
+func selectQIDs(db *sql.DB) []int {
+	// すべてのlog_idsをquestionテーブルから取得して配列に入れる
+	que := fmt.Sprintf(` SELECT start_log_ids, end_log_ids FROM question `)
+	rows, err := db.Query(que)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	QIDs := []int{}
+	for rows.Next() {
 		t1, t2 := "", ""
-		err := row.Scan(&t1, &t2)
+		err := rows.Scan(&t1, &t2)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				continue
 			}
 		}
 		t := strings.Split(t1+","+t2, ",")
-		fmt.Print(t)
-		//LIDs = append(LIDs, t)
+		a := make([]int, len(t))
+		for i := range a {
+			a[i], _ = strconv.Atoi(t[i])
+		}
+		QIDs = append(QIDs, a...)
 	}
 
-	return LIDs
+	return QIDs
+}
+
+func makeBody(db *sql.DB, log []Log, QIDs []int) string {
+	// 全角スペースを除去
+	// AAなら本文をaaに
+	// 改行を<br>に
+	// ""を"に
+	// aタグを除去
+	// 改行を抑制
+	// httpをリンクに
+	// レスアンカーをリンクに
+	// log_idがQIDsに存在するならdivをbox＆searchのリンク
+	// 名前欄を作成
+	return ""
 }
 
 func main() {
@@ -189,6 +203,8 @@ func main() {
 		panic(err)
 	}
 
+	// 全出題のレス番号を配列を取得
+	QIDs := selectQIDs(db)
 	// スレッド名を取得
 	tID := 831
 	thread := selectThread(db, strconv.Itoa(tID))
@@ -196,11 +212,8 @@ func main() {
 	// 1スレッド分のログを取得
 	log := selectLog(db, strconv.Itoa(tID))
 	fmt.Print(len(log))
-	// 出題のレス番号を取得
-	LIDs := searchLIDs(db, log) 
-	fmt.Print(len(LIDs))
-	// 本文を整形
-	// 名前欄を整形
-
+	// 本文・名前欄を整形
+	body := makeBody(db, log, QIDs)
+	fmt.Print(len(body))
 	// ファイルを出力
 }
