@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"strings"
 	"strconv"
+	"strings"
+	"regexp"
 )
 
 // Data ...
@@ -21,12 +22,12 @@ type Data struct {
 
 // Log ...
 type Log struct {
-	LID string
+	LID    string
 	Handle string
-	Mail string
-	Date string
-	ID string
-	Body string
+	Mail   string
+	Date   string
+	ID     string
+	Body   string
 }
 
 // SE ...
@@ -56,7 +57,7 @@ type Q struct {
 // 		panic(err)
 // 	}
 // 	defer rows.Close()
-// 
+//
 // 	// 問題をリストにして戻す
 // 	qs := []Q{}
 // 	for rows.Next() {
@@ -66,7 +67,7 @@ type Q struct {
 // 	}
 // 	return qs
 // }
-// 
+//
 // func selectHandle (se SE) string {
 // 	ops := se.Stas
 // 	if len(se.Ends) != 0 {
@@ -86,11 +87,11 @@ type Q struct {
 // 	}
 // 	return ops[0].Handle
 // }
-// 
+//
 // func formatData(se SE) Data{
 // 	// ハンドル名を選択
 // 	handle := selectHandle(se)
-// 	
+//
 // 	// ログを加工
 // 	qBody := ""
 // 	for _, sta := range se.Stas {
@@ -100,7 +101,7 @@ type Q struct {
 // 	for _, end := range se.Ends {
 // 		aBody += end.Body + "\n"
 // 	}
-// 
+//
 // 	// レスを加工
 // 	res := se.Stas[0].Res
 // 	if len(se.Ends) != 0 {
@@ -108,7 +109,7 @@ type Q struct {
 // 	}
 // 	return Data{se.Stas[0].TID, handle, se.Stas[0].Date, res, qBody, aBody, se.Note}
 // }
-// 
+//
 // func insertData(stmt *sql.Stmt, data Data) {
 // 	if _, err := stmt.Exec(data.TID, data.Handle, data.Date, data.Res, data.QBody, data.ABody, data.Note); err != nil {
 // 		panic(err)
@@ -193,8 +194,45 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 	// レスアンカーをリンクに
 	// log_idがQIDsに存在するならdivをbox＆searchのリンク
 	// 名前欄を作成
+	for _, res := range log {
+		p := res.Body
+		p = strings.Replace(p, "　", "", -1)
+
+		if (strings.Index(p, "　 ") != -1) {
+			p = "<p class=\"aa\"" + p + "</p>"
+		} else {
+			p = "<p>" + p + "</p>"
+		}
+
+		p = strings.Replace(p, "\n", "<br>", -1)
+
+		p = strings.Replace(p, "\"\"", "\"", -1)
+
+		p = strings.Replace(p, "a href=", "", -1)
+
+		p = strings.Replace(p, "<br><br> <br><br>", "<br><br>", -1)
+
+		for _, row := range strings.Split(p, "<br>") {
+			re, _ := regexp.Compile(`h?ttps?://[\w/:%#\$&\?\(\)~\.=\+\-]+`)
+			match := re.FindAllStringSubmatch(row, -1)
+			for _, m := range match {
+				row = strings.Replace(row, m[0], "<a href=\"h" + strings.TrimLeft(m[0], "h") + "\">h" + strings.TrimLeft(m[0], "h") + "</a>", -1)
+			}
+			fmt.Print(row)
+		}
+
+		//fmt.Print(p)
+
+		break
+	}
 	return ""
 }
+	// LID    string
+	// Handle string
+	// Mail   string
+	// Date   string
+	// ID     string
+	// Body   string
 
 func main() {
 	// umigamelogのコネクションを開く

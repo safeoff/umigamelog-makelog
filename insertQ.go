@@ -20,11 +20,11 @@ type Data struct {
 
 // Log ...
 type Log struct {
-	TID string
+	TID    string
 	Handle string
-	Date string
-	Res string
-	Body string
+	Date   string
+	Res    string
+	Body   string
 }
 
 // SE ...
@@ -67,7 +67,7 @@ func selectQs(db *sql.DB) []Q {
 
 func selectLog(db *sql.DB, ids string) []Log {
 	logs := []Log{}
-	for _, id := range strings.Split(ids, ","){
+	for _, id := range strings.Split(ids, ",") {
 		// idでlogを検索する
 		que := fmt.Sprintf(`
 		SELECT L.thread_id, L.handle, L.datetime, L.responce_num, L.body
@@ -84,7 +84,7 @@ func selectLog(db *sql.DB, ids string) []Log {
 	return logs
 }
 
-func selectHandle (se SE) string {
+func selectHandle(se SE) string {
 	ops := se.Stas
 	if len(se.Ends) != 0 {
 		ops = append(ops, se.Ends...)
@@ -104,10 +104,10 @@ func selectHandle (se SE) string {
 	return ops[0].Handle
 }
 
-func formatData(se SE) Data{
+func formatData(se SE) Data {
 	// ハンドル名を選択
 	handle := selectHandle(se)
-	
+
 	// ログを加工
 	qBody := ""
 	for _, sta := range se.Stas {
