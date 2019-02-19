@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"regexp"
+	"os"
 )
 
 // Data ...
@@ -194,7 +195,8 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 	// レスアンカーをリンクに
 	// log_idがQIDsに存在するならdivをbox＆searchのリンク
 	// 名前欄を作成
-	for _, res := range log {
+	h := ""
+	for i, res := range log {
 		p := res.Body
 		p = strings.Replace(p, "　", "", -1)
 
@@ -212,20 +214,40 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 
 		p = strings.Replace(p, "<br><br> <br><br>", "<br><br>", -1)
 
-		for _, row := range strings.Split(p, "<br>") {
+		rows := strings.Split(p, "<br>")
+		p = ""
+		for _, row := range rows {
 			re, _ := regexp.Compile(`h?ttps?://[\w/:%#\$&\?\(\)~\.=\+\-]+`)
 			match := re.FindAllStringSubmatch(row, -1)
 			for _, m := range match {
 				row = strings.Replace(row, m[0], "<a href=\"h" + strings.TrimLeft(m[0], "h") + "\">h" + strings.TrimLeft(m[0], "h") + "</a>", -1)
 			}
-			fmt.Print(row)
+			re, _ = regexp.Compile(`>>[0-9]+[\-[0-9]*]?`)
+			match = re.FindAllStringSubmatch(row, -1)
+			for _, m := range match {
+				row = strings.Replace(row, m[0], "<a href=\"#" + strings.TrimLeft(m[0], ">>") + "\">" + m[0] + "</a>", -1)
+			}
+			p += row
 		}
 
-		//fmt.Print(p)
-
-		break
+		lid, _ := strconv.Atoi(res.LID)
+		n := res.Handle
+		if contains(QIDs, lid) {
+			p = "<div class=\"box\">" + p
+			n = "<a href=\"../../search/?=" + n + "&op=and\">" + n + "</a>"
+		}
+		h += "<h1 id=\""+ strconv.Itoa(i+1) + "\">" + strconv.Itoa(i+1) + " " + n + " " + res.Mail + " " + res.Date + " " + res.ID + "</h1>" + p + "</div>"
 	}
-	return ""
+	return h
+}
+
+func contains(s []int, e int) bool {
+	for _, v := range s {
+		if e == v {
+			return true
+		}
+	}
+	return false
 }
 	// LID    string
 	// Handle string
@@ -233,6 +255,13 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 	// Date   string
 	// ID     string
 	// Body   string
+
+func writeHTML(tID string, thread string, body string) {
+	f, _ := os.Create(tID + ".html")
+	defer f.Close()
+	f.Write(([]byte)(body))
+	fmt.Print(thread)
+}
 
 func main() {
 	// umigamelogのコネクションを開く
@@ -246,12 +275,10 @@ func main() {
 	// スレッド名を取得
 	tID := 831
 	thread := selectThread(db, strconv.Itoa(tID))
-	fmt.Print(thread)
 	// 1スレッド分のログを取得
 	log := selectLog(db, strconv.Itoa(tID))
-	fmt.Print(len(log))
 	// 本文・名前欄を整形
 	body := makeBody(db, log, QIDs)
-	fmt.Print(len(body))
 	// ファイルを出力
+	writeHTML(strconv.Itoa(tID), thread, body)
 }
