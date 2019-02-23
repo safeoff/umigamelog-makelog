@@ -183,7 +183,7 @@ func contains(s []int, e int) bool {
 }
 
 func writeHTML(tID string, thread string, body string) {
-	f, _ := os.Create(tID + ".html")
+	f, _ := os.Create("../umigamelog-hugo/layouts/shortcodes/" + tID + ".html")
 	defer f.Close()
 	f.Write(([]byte)(body))
 	fmt.Print(thread)
