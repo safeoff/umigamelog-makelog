@@ -45,78 +45,6 @@ type Q struct {
 	Note string
 }
 
-// func selectQs(db *sql.DB) []Q {
-// 	// 問題のidsを取得
-// 	lim := 100000
-// 	que := fmt.Sprintf(`
-// 	SELECT Q.start_log_ids, Q.end_log_ids, Q.note
-// 	FROM question AS Q
-// 	WHERE Q.question_id < %d
-// 	`, lim)
-// 	rows, err := db.Query(que)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer rows.Close()
-//
-// 	// 問題をリストにして戻す
-// 	qs := []Q{}
-// 	for rows.Next() {
-// 		tmp := Q{}
-// 		rows.Scan(&tmp.Sta, &tmp.End, &tmp.Note)
-// 		qs = append(qs, tmp)
-// 	}
-// 	return qs
-// }
-//
-// func selectHandle (se SE) string {
-// 	ops := se.Stas
-// 	if len(se.Ends) != 0 {
-// 		ops = append(ops, se.Ends...)
-// 	}
-// 	for _, op := range ops {
-// 		if op.Handle == "あなたのうしろに名無しさんが・・・" {
-// 			continue
-// 		}
-// 		if op.Handle == "本当にあった怖い名無し" {
-// 			continue
-// 		}
-// 		if op.Handle == "ウミガメ信者" {
-// 			continue
-// 		}
-// 		return op.Handle
-// 	}
-// 	return ops[0].Handle
-// }
-//
-// func formatData(se SE) Data{
-// 	// ハンドル名を選択
-// 	handle := selectHandle(se)
-//
-// 	// ログを加工
-// 	qBody := ""
-// 	for _, sta := range se.Stas {
-// 		qBody += sta.Body + "\n"
-// 	}
-// 	aBody := ""
-// 	for _, end := range se.Ends {
-// 		aBody += end.Body + "\n"
-// 	}
-//
-// 	// レスを加工
-// 	res := se.Stas[0].Res
-// 	if len(se.Ends) != 0 {
-// 		res += "-" + se.Ends[len(se.Ends)-1].Res
-// 	}
-// 	return Data{se.Stas[0].TID, handle, se.Stas[0].Date, res, qBody, aBody, se.Note}
-// }
-//
-// func insertData(stmt *sql.Stmt, data Data) {
-// 	if _, err := stmt.Exec(data.TID, data.Handle, data.Date, data.Res, data.QBody, data.ABody, data.Note); err != nil {
-// 		panic(err)
-// 	}
-// }
-
 func selectThread(db *sql.DB, tID string) string {
 	// idでlogを検索する
 	que := fmt.Sprintf(`
@@ -201,9 +129,9 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 		p = strings.Replace(p, "　", "", -1)
 
 		if (strings.Index(p, "　 ") != -1) {
-			p = "<p class=\"aa\"" + p + "</p>"
+			p = "<div class=\"aa\"" + p + "</div>"
 		} else {
-			p = "<p>" + p + "</p>"
+			p = "<div>" + p + "</div>"
 		}
 
 		p = strings.Replace(p, "\n", "<br>", -1)
@@ -216,7 +144,10 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 
 		rows := strings.Split(p, "<br>")
 		p = ""
-		for _, row := range rows {
+		for rowi, row := range rows {
+			if rowi != 0 {
+				p += "<br>"
+			}
 			re, _ := regexp.Compile(`h?ttps?://[\w/:%#\$&\?\(\)~\.=\+\-]+`)
 			match := re.FindAllStringSubmatch(row, -1)
 			for _, m := range match {
@@ -232,11 +163,12 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 
 		lid, _ := strconv.Atoi(res.LID)
 		n := res.Handle
+		h += "<div class=\"box"
 		if contains(QIDs, lid) {
-			p = "<div class=\"box\">" + p
-			n = "<a href=\"../../search/?=" + n + "&op=and\">" + n + "</a>"
+			h += " qa"
+			n = "<a href=\"../../search/?q=" + n + "&op=and\">" + n + "</a>"
 		}
-		h += "<h1 id=\""+ strconv.Itoa(i+1) + "\">" + strconv.Itoa(i+1) + " " + n + " " + res.Mail + " " + res.Date + " " + res.ID + "</h1>" + p + "</div>"
+		h += "\"><div class=\"footnote\" id=\""+ strconv.Itoa(i+1) + "\">" + strconv.Itoa(i+1) + " " + n + " " + res.Mail + " " + res.Date + " " + res.ID + "</div>" + p + "</div>\n"
 	}
 	return h
 }
@@ -249,12 +181,6 @@ func contains(s []int, e int) bool {
 	}
 	return false
 }
-	// LID    string
-	// Handle string
-	// Mail   string
-	// Date   string
-	// ID     string
-	// Body   string
 
 func writeHTML(tID string, thread string, body string) {
 	f, _ := os.Create(tID + ".html")
