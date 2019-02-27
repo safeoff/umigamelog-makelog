@@ -127,9 +127,10 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 	for i, res := range log {
 		p := res.Body
 		p = strings.Replace(p, "　", "", -1)
+		p = strings.Replace(p, ">", "&gt;", -1)
 
 		if (strings.Index(p, "　 ") != -1) {
-			p = "<div class=\"aa\"" + p + "</div>"
+			p = "<div class=\"aa\">" + p + "</div>"
 		} else {
 			p = "<div>" + p + "</div>"
 		}
@@ -153,13 +154,14 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 			for _, m := range match {
 				row = strings.Replace(row, m[0], "<a href=\"h" + strings.TrimLeft(m[0], "h") + "\">h" + strings.TrimLeft(m[0], "h") + "</a>", -1)
 			}
-			re, _ = regexp.Compile(`>>[0-9]+[\-[0-9]*]?`)
+			re, _ = regexp.Compile(`&gt;&gt;[0-9]+[\-[0-9]*]?`)
 			match = re.FindAllStringSubmatch(row, -1)
 			for _, m := range match {
-				row = strings.Replace(row, m[0], "<a href=\"#" + strings.TrimLeft(m[0], ">>") + "\">" + m[0] + "</a>", -1)
+				row = strings.Replace(row, m[0], "<a href=\"#" + strings.TrimLeft(m[0], "&gt;&gt;") + "\">" + m[0] + "</a> ", -1)
 			}
 			p += row
 		}
+		p = strings.Replace(p, "&gt;", ">", -1)
 
 		lid, _ := strconv.Atoi(res.LID)
 		n := res.Handle
@@ -182,11 +184,21 @@ func contains(s []int, e int) bool {
 	return false
 }
 
-func writeHTML(tID string, thread string, body string) {
+func getDate(date string) string {
+	fmt.Print(date)
+	return date
+}
+// 2018/08/01(水) 17:53:52.74
+
+func writeMD(tID string, thread string, date string) {
+	fmt.Print(thread)
+}
+
+func writeHTML(tID string, body string) {
 	f, _ := os.Create("../umigamelog-hugo/layouts/shortcodes/" + tID + ".html")
+	//f, _ := os.Create(tID + ".html")
 	defer f.Close()
 	f.Write(([]byte)(body))
-	fmt.Print(thread)
 }
 
 func main() {
@@ -205,6 +217,9 @@ func main() {
 	log := selectLog(db, strconv.Itoa(tID))
 	// 本文・名前欄を整形
 	body := makeBody(db, log, QIDs)
+	// 更新日を取得
+	date := getDate(log[len(log)-1].Date)
 	// ファイルを出力
-	writeHTML(strconv.Itoa(tID), thread, body)
+	writeMD(strconv.Itoa(tID), thread, date)
+	writeHTML(strconv.Itoa(tID), body)
 }
