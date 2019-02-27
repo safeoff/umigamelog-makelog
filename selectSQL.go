@@ -72,6 +72,8 @@ func selectSQL(req Req) (Res, error) {
 			break
 		}
 
+		qBody = strings.Replace(qBody, "\n", "", -1)
+		aBody = strings.Replace(aBody, "\n", "", -1)
 		r.List = append(r.List, Data{TID: tID, Handle: handle, Date: date, Res: res, QBody: qBody, ABody: aBody})
 	}
 	return r, nil
