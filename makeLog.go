@@ -208,6 +208,10 @@ func writeMD(tID string, thread string, date string) {
 		"\ntags: [" + strings.Split(date, "-")[0] +
 		",オカルト板]" +
 		"\n---" +
+		"<script src=\"../../js/cupsoup.js\"></script>" +
+		"<form>" +
+		"<input type=\"button\" value=\"問題と解説のみにする\" onClick=\"toggleCupsoup()\">" +
+		"</form>" +
 		"\n{{< " + tID + " >}}"
 	f, _ := os.Create("../umigamelog-hugo/content/posts/" + tID + ".md")
 	defer f.Close()
@@ -228,7 +232,7 @@ func main() {
 		panic(err)
 	}
 
-	for tID := 11; tID < 50; tID++ {
+	for tID := 1; tID < 3; tID++ {
 		// 全出題のレス番号を配列を取得
 		QIDs := selectQIDs(db)
 		// スレッド名を取得
