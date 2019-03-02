@@ -203,16 +203,25 @@ func getDate(date1 string) string {
 }
 
 func writeMD(tID string, thread string, date string) {
+	t, _ := strconv.Atoi(tID)
+	be := strconv.Itoa(t-1)
+	af := strconv.Itoa(t+1)
+
 	s := "---\ntitle: " + thread +
 		"\ndate: " + date +
 		"\ntags: [" + strings.Split(date, "-")[0] +
 		",オカルト板]" +
 		"\n---" +
-		"<script src=\"../../js/cupsoup.js\"></script>" +
-		"<form>" +
-		"<input type=\"button\" value=\"問題と解説のみにする\" onClick=\"toggleCupsoup()\">" +
-		"</form>" +
-		"\n{{< " + tID + " >}}"
+		"\n<div class=\"th_left\"><a href=\"../" + be + "\"><< " + be + "</a></div>" +
+		"\n<div class=\"th_right\"><a href=\"../" + af + "\">" + af + " >></a></div>" +
+		"\n<br><br>" +
+		"\n<script src=\"../../js/cupsoup.js\"></script>" +
+		"\n<form>" +
+		"\n<input type=\"button\" value=\"問題と解説のみにする\" onClick=\"toggleCupsoup()\">" +
+		"\n</form>" +
+		"\n{{< " + tID + " >}}" +
+		"\n<div class=\"th_left\"><a href=\"../" + be + "\"><< " + be + "</a></div>" +
+		"\n<div class=\"th_right\"><a href=\"../" + af + "\">" + af + " >></a></div>"
 	f, _ := os.Create("../umigamelog-hugo/content/posts/" + tID + ".md")
 	defer f.Close()
 	f.Write(([]byte)(s))
@@ -232,7 +241,7 @@ func main() {
 		panic(err)
 	}
 
-	for tID := 1; tID < 3; tID++ {
+	for tID := 188; tID < 833; tID++ {
 		// 全出題のレス番号を配列を取得
 		QIDs := selectQIDs(db)
 		// スレッド名を取得
