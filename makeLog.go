@@ -51,7 +51,7 @@ func selectThread(db *sql.DB, tID string) string {
 	que := fmt.Sprintf(`
 	SELECT thread
 	FROM thread
-	WHERE thread_id = %s
+	WHERE thread_id = "%s"
 	`, tID)
 	row := db.QueryRow(que)
 
@@ -250,19 +250,20 @@ func main() {
 	}
 
 	for tID := 829; tID < 833; tID++ {
+		s_tID := strconv.Itoa(tID)
 		// 全出題のレス番号を配列を取得
 		QIDs := selectQIDs(db)
 		// スレッド名を取得
-		thread := selectThread(db, strconv.Itoa(tID))
+		thread := selectThread(db, s_tID)
 		// 1スレッド分のログを取得
-		log := selectLog(db, strconv.Itoa(tID))
+		log := selectLog(db, s_tID)
 		// 本文・名前欄を整形
 		body := makeBody(db, log, QIDs)
 		// 更新日を取得
 		date := getDate(log[len(log)-1].Date)
 		// ファイルを出力
-		writeMD(strconv.Itoa(tID), thread, date)
-		writeHTML(strconv.Itoa(tID), body)
-		fmt.Print(strconv.Itoa(tID) + ", ")
+		writeMD(s_tID, thread, date)
+		writeHTML(s_tID, body)
+		fmt.Print(s_tID + ", ")
 	}
 }
