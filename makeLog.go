@@ -127,7 +127,7 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 	h := ""
 	for i, res := range log {
 		p := res.Body
-		p = strings.Replace(p, "　", "", -1)
+		p = strings.TrimRight(p, "　")
 
 		p = html.EscapeString(p)
 		p = strings.Replace(p, "{", "&#123;", -1)
@@ -249,7 +249,7 @@ func main() {
 		panic(err)
 	}
 
-	for tID := 140; tID < 145; tID++ {
+	for tID := 829; tID < 833; tID++ {
 		// 全出題のレス番号を配列を取得
 		QIDs := selectQIDs(db)
 		// スレッド名を取得
