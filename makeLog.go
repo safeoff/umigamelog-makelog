@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"html"
 )
 
 // Data ...
@@ -127,7 +128,10 @@ func makeBody(db *sql.DB, log []Log, QIDs []int) string {
 	for i, res := range log {
 		p := res.Body
 		p = strings.Replace(p, "　", "", -1)
-		p = strings.Replace(p, ">", "&gt;", -1)
+
+		p = html.EscapeString(p)
+		p = strings.Replace(p, "{", "&#123;", -1)
+		p = strings.Replace(p, "}", "&#125;", -1)
 
 		if strings.Index(p, "　 ") != -1 {
 			p = "<div class=\"aa\">" + p + "</div>"
@@ -191,6 +195,10 @@ func getDate(date1 string) string {
 	// アンゴルモア歴とかを置換
 	rep := regexp.MustCompile(`[^0-9]`)
 	year = rep.ReplaceAllString(year, "")
+	// 2665を2005に置換 エイプリルフールめんどくさ
+	if year == "2665" {
+		year = "2005"
+	}
 	// 20**ではない文字列を置換
 	if year[:1] != "2" {
 		year = "20" + year
@@ -241,7 +249,7 @@ func main() {
 		panic(err)
 	}
 
-	for tID := 188; tID < 833; tID++ {
+	for tID := 140; tID < 145; tID++ {
 		// 全出題のレス番号を配列を取得
 		QIDs := selectQIDs(db)
 		// スレッド名を取得
