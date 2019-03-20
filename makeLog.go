@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"html"
+	"flag"
 )
 
 // Data ...
@@ -46,13 +47,13 @@ type Q struct {
 	Note string
 }
 
-func selectThread(db *sql.DB, tID string) string {
+func selectThread(db *sql.DB, threadType string, tID string) string {
 	// idでlogを検索する
 	que := fmt.Sprintf(`
 	SELECT thread
 	FROM thread
 	WHERE thread_id = "%s"
-	`, tID)
+	`, threadType + tID)
 	row := db.QueryRow(que)
 
 	// logをリストにする
@@ -61,13 +62,13 @@ func selectThread(db *sql.DB, tID string) string {
 	return thread
 }
 
-func selectLog(db *sql.DB, tID string) []Log {
+func selectLog(db *sql.DB, threadType string, tID string) []Log {
 	// idでlogを検索する
 	que := fmt.Sprintf(`
     SELECT log_id, handle, mail, datetime, id, body
     FROM log
     WHERE thread_id = "%s"
-	`, tID)
+	`, threadType + tID)
 	rows, err := db.Query(que)
 	if err != nil {
 		panic(err)
@@ -210,15 +211,22 @@ func getDate(date1 string) string {
 	return date2
 }
 
-func writeMD(tID string, thread string, date string) {
+func writeMD(threadType string, tID string, thread string, date string) {
 	t, _ := strconv.Atoi(tID)
-	be := strconv.Itoa(t-1)
-	af := strconv.Itoa(t+1)
+	be := threadType + strconv.Itoa(t-1)
+	af := threadType + strconv.Itoa(t+1)
+	threadTypeMap := map[string]string {
+		"": "オカルト板",
+		"m": "雑談掲示板",
+		"y": "雑談掲示板",
+		"t": "雑談掲示板",
+		"s": "雑談掲示板",
+	}
 
 	s := "---\ntitle: " + thread +
 		"\ndate: " + date +
 		"\ntags: [" + strings.Split(date, "-")[0] +
-		",オカルト板]" +
+		"," + threadTypeMap[threadType] + "]" +
 		"\n---" +
 		"\n<div class=\"th_left\"><a href=\"../" + be + "\"><< " + be + "</a></div>" +
 		"\n<div class=\"th_right\"><a href=\"../" + af + "\">" + af + " >></a></div>" +
@@ -227,43 +235,56 @@ func writeMD(tID string, thread string, date string) {
 		"\n<form>" +
 		"\n<input type=\"button\" value=\"問題と解説のみにする\" onClick=\"toggleCupsoup()\">" +
 		"\n</form>" +
-		"\n{{< " + tID + " >}}" +
+		"\n{{< " + threadType + tID + " >}}" +
 		"\n<div class=\"th_left\"><a href=\"../" + be + "\"><< " + be + "</a></div>" +
 		"\n<div class=\"th_right\"><a href=\"../" + af + "\">" + af + " >></a></div>"
-	f, _ := os.Create("../umigamelog-hugo/content/posts/" + tID + ".md")
+	f, _ := os.Create("../umigamelog-hugo/content/posts/" + threadType + tID + ".md")
 	defer f.Close()
 	f.Write(([]byte)(s))
 }
 
-func writeHTML(tID string, body string) {
-	f, _ := os.Create("../umigamelog-hugo/layouts/shortcodes/" + tID + ".html")
+func writeHTML(threadType string, tID string, body string) {
+	f, _ := os.Create("../umigamelog-hugo/layouts/shortcodes/" + threadType + tID + ".html")
 	//f, _ := os.Create(tID + ".html")
 	defer f.Close()
 	f.Write(([]byte)(body))
 }
 
 func main() {
+	// 引数を受け取る
+	flag.Parse()
+	args := flag.Args()
+	if args[0] == "o" {
+		args[0] = ""
+	}
+
 	// umigamelogのコネクションを開く
 	db, err := sql.Open("sqlite3", "../log.db")
 	if err != nil {
 		panic(err)
 	}
 
-	for tID := 829; tID < 833; tID++ {
+	// 引数1がスレの種類（o, m, y, t, s）、
+	// 引数2が開始スレ、
+	// 引数3が終了スレ
+	s, _ := strconv.Atoi(args[1])
+	e, _ := strconv.Atoi(args[2])
+	e++
+	for tID := s; tID < e; tID++ {
 		s_tID := strconv.Itoa(tID)
 		// 全出題のレス番号を配列を取得
 		QIDs := selectQIDs(db)
 		// スレッド名を取得
-		thread := selectThread(db, s_tID)
+		thread := selectThread(db, args[0], s_tID)
 		// 1スレッド分のログを取得
-		log := selectLog(db, s_tID)
+		log := selectLog(db, args[0], s_tID)
 		// 本文・名前欄を整形
 		body := makeBody(db, log, QIDs)
 		// 更新日を取得
 		date := getDate(log[len(log)-1].Date)
 		// ファイルを出力
-		writeMD(s_tID, thread, date)
-		writeHTML(s_tID, body)
-		fmt.Print(s_tID + ", ")
+		writeMD(args[0], s_tID, thread, date)
+		writeHTML(args[0], s_tID, body)
+		fmt.Print(args[0] + s_tID + ", ")
 	}
 }

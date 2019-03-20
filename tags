@@ -1,0 +1,170 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/45968eff/
+ABody	insertQ.go	/^	ABody  string$/;"	m	struct:main.Data	typeref:typename:string
+ABody	makeLog.go	/^	ABody  string$/;"	m	struct:main.Data	typeref:typename:string
+ABody	selectSQL.go	/^	ABody  string `json:"aBody"`$/;"	m	struct:main.Data	typeref:typename:string
+ABody	sqdb.go	/^	ABody  string `json:"aBody"`$/;"	m	struct:main.Data	typeref:typename:string
+Body	insertQ.go	/^	Body   string$/;"	m	struct:main.Log	typeref:typename:string
+Body	makeLog.go	/^	Body   string$/;"	m	struct:main.Log	typeref:typename:string
+Data	insertQ.go	/^type Data struct {$/;"	s	package:main
+Data	makeLog.go	/^type Data struct {$/;"	s	package:main
+Data	selectSQL.go	/^type Data struct {$/;"	s	package:main
+Data	sqdb.go	/^type Data struct {$/;"	s	package:main
+Date	insertQ.go	/^	Date   string$/;"	m	struct:main.Data	typeref:typename:string
+Date	insertQ.go	/^	Date   string$/;"	m	struct:main.Log	typeref:typename:string
+Date	makeLog.go	/^	Date   string$/;"	m	struct:main.Data	typeref:typename:string
+Date	makeLog.go	/^	Date   string$/;"	m	struct:main.Log	typeref:typename:string
+Date	selectSQL.go	/^	Date   string `json:"date"`$/;"	m	struct:main.Data	typeref:typename:string
+Date	sqdb.go	/^	Date   string `json:"date"`$/;"	m	struct:main.Data	typeref:typename:string
+End	insertQ.go	/^	End  string$/;"	m	struct:main.Q	typeref:typename:string
+End	makeLog.go	/^	End  string$/;"	m	struct:main.Q	typeref:typename:string
+Ends	insertQ.go	/^	Ends []Log$/;"	m	struct:main.SE	typeref:typename:[]Log
+Ends	makeLog.go	/^	Ends []Log$/;"	m	struct:main.SE	typeref:typename:[]Log
+Handle	insertQ.go	/^	Handle string$/;"	m	struct:main.Data	typeref:typename:string
+Handle	insertQ.go	/^	Handle string$/;"	m	struct:main.Log	typeref:typename:string
+Handle	makeLog.go	/^	Handle string$/;"	m	struct:main.Data	typeref:typename:string
+Handle	makeLog.go	/^	Handle string$/;"	m	struct:main.Log	typeref:typename:string
+Handle	selectSQL.go	/^	Handle string `json:"handle"`$/;"	m	struct:main.Data	typeref:typename:string
+Handle	sqdb.go	/^	Handle string `json:"handle"`$/;"	m	struct:main.Data	typeref:typename:string
+ID	makeLog.go	/^	ID     string$/;"	m	struct:main.Log	typeref:typename:string
+LID	makeLog.go	/^	LID    string$/;"	m	struct:main.Log	typeref:typename:string
+List	selectSQL.go	/^	List []Data `json:"list"`$/;"	m	struct:main.Res	typeref:typename:[]Data
+Log	insertQ.go	/^type Log struct {$/;"	s	package:main
+Log	makeLog.go	/^type Log struct {$/;"	s	package:main
+Mail	makeLog.go	/^	Mail   string$/;"	m	struct:main.Log	typeref:typename:string
+Note	insertQ.go	/^	Note   string$/;"	m	struct:main.Data	typeref:typename:string
+Note	insertQ.go	/^	Note string$/;"	m	struct:main.Q	typeref:typename:string
+Note	insertQ.go	/^	Note string$/;"	m	struct:main.SE	typeref:typename:string
+Note	makeLog.go	/^	Note   string$/;"	m	struct:main.Data	typeref:typename:string
+Note	makeLog.go	/^	Note string$/;"	m	struct:main.Q	typeref:typename:string
+Note	makeLog.go	/^	Note string$/;"	m	struct:main.SE	typeref:typename:string
+Op	selectSQL.go	/^	Op string `json:"op"`$/;"	m	struct:main.Req	typeref:typename:string
+Q	insertQ.go	/^type Q struct {$/;"	s	package:main
+Q	makeLog.go	/^type Q struct {$/;"	s	package:main
+Q	selectSQL.go	/^	Q  string `json:"q"`$/;"	m	struct:main.Req	typeref:typename:string
+QBody	insertQ.go	/^	QBody  string$/;"	m	struct:main.Data	typeref:typename:string
+QBody	makeLog.go	/^	QBody  string$/;"	m	struct:main.Data	typeref:typename:string
+QBody	selectSQL.go	/^	QBody  string `json:"qBody"`$/;"	m	struct:main.Data	typeref:typename:string
+QBody	sqdb.go	/^	QBody  string `json:"qBody"`$/;"	m	struct:main.Data	typeref:typename:string
+Req	selectSQL.go	/^type Req struct {$/;"	s	package:main
+Res	insertQ.go	/^	Res    string$/;"	m	struct:main.Data	typeref:typename:string
+Res	insertQ.go	/^	Res    string$/;"	m	struct:main.Log	typeref:typename:string
+Res	makeLog.go	/^	Res    string$/;"	m	struct:main.Data	typeref:typename:string
+Res	selectSQL.go	/^	Res    string `json:"res"`$/;"	m	struct:main.Data	typeref:typename:string
+Res	selectSQL.go	/^type Res struct {$/;"	s	package:main
+Res	sqdb.go	/^	Res    string `json:"res"`$/;"	m	struct:main.Data	typeref:typename:string
+SE	insertQ.go	/^type SE struct {$/;"	s	package:main
+SE	makeLog.go	/^type SE struct {$/;"	s	package:main
+Sta	insertQ.go	/^	Sta  string$/;"	m	struct:main.Q	typeref:typename:string
+Sta	makeLog.go	/^	Sta  string$/;"	m	struct:main.Q	typeref:typename:string
+Stas	insertQ.go	/^	Stas []Log$/;"	m	struct:main.SE	typeref:typename:[]Log
+Stas	makeLog.go	/^	Stas []Log$/;"	m	struct:main.SE	typeref:typename:[]Log
+TID	insertQ.go	/^	TID    string$/;"	m	struct:main.Data	typeref:typename:string
+TID	insertQ.go	/^	TID    string$/;"	m	struct:main.Log	typeref:typename:string
+TID	makeLog.go	/^	TID    string$/;"	m	struct:main.Data	typeref:typename:string
+TID	selectSQL.go	/^	TID    string `json:"tID"`$/;"	m	struct:main.Data	typeref:typename:string
+TID	sqdb.go	/^	TID    string `json:"tID"`$/;"	m	struct:main.Data	typeref:typename:string
+a_body	make_cupsoup.py	/^            a_body = u'<p class="aa ans">' + a_body + u' <\/p>'$/;"	v
+a_body	make_cupsoup.py	/^        a_body = a_body.replace(u'　 \\n', u'\\n').rstrip(u'　 ')$/;"	v
+a_body	make_cupsoup.py	/^        a_body = a_body.rstrip(u'　 ')$/;"	v
+a_body	make_cupsoup.py	/^        a_body = u''$/;"	v
+bod	make_cupsoup.py	/^    bod = []$/;"	v
+bod	make_log831.py	/^    bod = []$/;"	v
+body	make_cupsoup.py	/^            body = body.replace(u'<br><br> <br><br>', u'<br><br>')$/;"	v
+body	make_cupsoup.py	/^        body = body.replace(u'""', u'"').replace(u'a href=', u'')$/;"	v
+body	make_cupsoup.py	/^        body = body.replace(u'\\n \\n', u'<br><br>').replace(u'\\n', u' ')$/;"	v
+body	make_cupsoup.py	/^        body = body.replace(u'\\n', u'<br>')$/;"	v
+body	make_cupsoup.py	/^        body = body.rstrip(u'\\n')$/;"	v
+body	make_cupsoup.py	/^        body = q_body + a_body$/;"	v
+body	make_cupsoup.py	/^        body = u''$/;"	v
+cnt	make_cupsoup.py	/^    cnt = 0$/;"	v
+cnt	make_log831.py	/^    cnt = 0$/;"	v
+conn	make_cupsoup.py	/^conn = sqlite3.connect("umigamelog.sqlite")$/;"	v
+conn	make_log831.py	/^conn = sqlite3.connect("umigamelog.sqlite")$/;"	v
+contains	makeLog.go	/^func contains(s []int, e int) bool {$/;"	f	package:main	typeref:typename:bool
+cur	make_cupsoup.py	/^cur = conn.cursor()$/;"	v
+cur	make_log831.py	/^cur = conn.cursor()$/;"	v
+dat	make_cupsoup.py	/^    dat = []$/;"	v
+dat	make_log831.py	/^    dat = []$/;"	v
+datetime	make_cupsoup.py	/^                datetime = fet[2]$/;"	v
+datetime	make_cupsoup.py	/^        datetime = u''$/;"	v
+e_res	make_cupsoup.py	/^                e_res = fet[3]$/;"	v
+e_res	make_cupsoup.py	/^        e_res = 0$/;"	v
+f	make_cupsoup.py	/^    f = open('cupsoup\/' + hai + 'cupsoup.html', 'w')$/;"	v
+f	make_log831.py	/^    f = open('log\/' + unicode(x) + '.html', 'w')$/;"	v
+fe	make_cupsoup.py	/^        fe = cur.fetchone()$/;"	v
+fe	make_log831.py	/^        fe = cur.fetchone()$/;"	v
+fet	make_cupsoup.py	/^            fet = cur.fetchone()$/;"	v
+formatData	insertQ.go	/^func formatData(se SE) Data {$/;"	f	package:main	typeref:typename:Data
+getDate	makeLog.go	/^func getDate(date1 string) string {$/;"	f	package:main	typeref:typename:string
+hai	make_cupsoup.py	/^    hai = u'' + unicode(x) + u''$/;"	v
+han	make_cupsoup.py	/^    han = []$/;"	v
+han	make_log831.py	/^    han = []$/;"	v
+handle	make_cupsoup.py	/^                handle = fet[1]$/;"	v
+handle	make_cupsoup.py	/^        handle = u''$/;"	v
+htm	make_cupsoup.py	/^    htm = u'''$/;"	v
+htm	make_log831.py	/^    htm = u''$/;"	v
+html2unicode	module.py	/^def html2unicode(u):$/;"	f
+htmlentity2unicode	module.py	/^def htmlentity2unicode(text):$/;"	f
+insertData	insertQ.go	/^func insertData(stmt *sql.Stmt, data Data) {$/;"	f	package:main
+log	make_cupsoup.py	/^    log = []$/;"	v
+log	make_log831.py	/^    log = []$/;"	v
+mai	make_cupsoup.py	/^    mai = []$/;"	v
+mai	make_log831.py	/^    mai = []$/;"	v
+main	insertQ.go	/^func main() {$/;"	f	package:main
+main	insertQ.go	/^package main$/;"	p
+main	makeLog.go	/^func main() {$/;"	f	package:main
+main	makeLog.go	/^package main$/;"	p
+main	selectSQL.go	/^func main() {$/;"	f	package:main
+main	selectSQL.go	/^package main$/;"	p
+main	sqdb.go	/^func main() {$/;"	f	package:main
+main	sqdb.go	/^package main$/;"	p
+makeBody	makeLog.go	/^func makeBody(db *sql.DB, log []Log, QIDs []int) string {$/;"	f	package:main	typeref:typename:string
+mat	make_cupsoup.py	/^            mat = re.findall(u'h?ttps?:\/\/[\\w\/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+', tmp[j])$/;"	v
+mat	make_log831.py	/^            mat = re.findall(u'>>[0-9]+[\\-[0-9]*]?', tmp[j])$/;"	v
+mat	make_log831.py	/^            mat = re.findall(u'h?ttps?:\/\/[\\w\/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+', tmp[j])$/;"	v
+q_body	make_cupsoup.py	/^            q_body = u'<p class="aa">' + q_body + u' <\/p><br>'$/;"	v
+q_body	make_cupsoup.py	/^        q_body = q_body.replace(u'　 \\n', u'\\n').rstrip(u'　 ')$/;"	v
+q_body	make_cupsoup.py	/^        q_body = q_body.rstrip(u'　 ')$/;"	v
+q_body	make_cupsoup.py	/^        q_body = u''$/;"	v
+que	make_cupsoup.py	/^    que = []$/;"	v
+que	make_cupsoup.py	/^    que = list(set(que))$/;"	v
+que	make_log831.py	/^    que = list(set(que))$/;"	v
+que	make_log831.py	/^    que = map(int, que)$/;"	v
+que	make_log831.py	/^    que = map(lambda n: n - int(log[0]) + 1, que)$/;"	v
+que	make_log831.py	/^    que = que.split(',')$/;"	v
+que	make_log831.py	/^    que = u''$/;"	v
+read_file_unicode	module.py	/^def read_file_unicode(t):$/;"	f
+remove_a	module.py	/^def remove_a(t):$/;"	f
+s_res	make_cupsoup.py	/^                s_res = fet[3]$/;"	v
+s_res	make_cupsoup.py	/^        s_res = 0$/;"	v
+search_between	module.py	/^def search_between(t, s, e):$/;"	f
+selectHandle	insertQ.go	/^func selectHandle(se SE) string {$/;"	f	package:main	typeref:typename:string
+selectLog	insertQ.go	/^func selectLog(db *sql.DB, ids string) []Log {$/;"	f	package:main	typeref:typename:[]Log
+selectLog	makeLog.go	/^func selectLog(db *sql.DB, tID string) []Log {$/;"	f	package:main	typeref:typename:[]Log
+selectQIDs	makeLog.go	/^func selectQIDs(db *sql.DB) []int {$/;"	f	package:main	typeref:typename:[]int
+selectQs	insertQ.go	/^func selectQs(db *sql.DB) []Q {$/;"	f	package:main	typeref:typename:[]Q
+selectSQL	selectSQL.go	/^func selectSQL(req Req) (Res, error) {$/;"	f	package:main	typeref:typename:(Res, error)
+selectThread	makeLog.go	/^func selectThread(db *sql.DB, tID string) string {$/;"	f	package:main	typeref:typename:string
+select_sql	module.py	/^def select_sql(sql):$/;"	f
+shaping_body	module.py	/^def shaping_body(t):$/;"	f
+sqdb	sqdb.go	/^func sqdb() {$/;"	f	package:main
+sql	make_cupsoup.py	/^                sql = '''$/;"	v
+sql	make_cupsoup.py	/^            sql = '''$/;"	v
+sql	make_cupsoup.py	/^        sql = '''$/;"	v
+sql	make_cupsoup.py	/^    sql = '''$/;"	v
+sql	make_log831.py	/^        sql = '''$/;"	v
+sql	make_log831.py	/^    sql = '''$/;"	v
+tit	make_cupsoup.py	/^    tit = cur.fetchone()[0]$/;"	v
+tit	make_log831.py	/^    tit = cur.fetchone()[0]$/;"	v
+tmp	make_cupsoup.py	/^        tmp = body.split('<br>')$/;"	v
+tmp	make_log831.py	/^        tmp = bod[i].split('<br>')$/;"	v
+uid	make_cupsoup.py	/^    uid = []$/;"	v
+uid	make_log831.py	/^    uid = []$/;"	v
+writeHTML	makeLog.go	/^func writeHTML(tID string, body string) {$/;"	f	package:main
+writeMD	makeLog.go	/^func writeMD(tID string, thread string, date string) {$/;"	f	package:main
