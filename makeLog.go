@@ -217,16 +217,16 @@ func writeMD(threadType string, tID string, thread string, date string) {
 	af := threadType + strconv.Itoa(t+1)
 	threadTypeMap := map[string]string {
 		"": "オカルト板",
-		"m": "雑談掲示板",
-		"y": "雑談掲示板",
-		"t": "雑談掲示板",
-		"s": "雑談掲示板",
+		"m": "マラソン",
+		"y": "闇鍋",
+		"t": "遠山スレ",
+		"s": "障害時スレ",
 	}
 
 	s := "---\ntitle: " + thread +
 		"\ndate: " + date +
 		"\ntags: [" + strings.Split(date, "-")[0] +
-		"," + threadTypeMap[threadType] + "]" +
+		"年," + threadTypeMap[threadType] + "]" +
 		"\n---" +
 		"\n<div class=\"th_left\"><a href=\"../" + be + "\"><< " + be + "</a></div>" +
 		"\n<div class=\"th_right\"><a href=\"../" + af + "\">" + af + " >></a></div>" +
