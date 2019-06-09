@@ -281,7 +281,7 @@ func main() {
 		// 本文・名前欄を整形
 		body := makeBody(db, log, QIDs)
 		// 更新日を取得
-		date := getDate(log[len(log)-5].Date)
+		date := getDate(log[len(log)-4].Date)
 		// ファイルを出力
 		writeMD(args[0], s_tID, thread, date)
 		writeHTML(args[0], s_tID, body)

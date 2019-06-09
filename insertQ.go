@@ -43,11 +43,11 @@ type Q struct {
 
 func selectQs(db *sql.DB) []Q {
 	// 問題のidsを取得
-	lim := 100000
+	lim := 15864
 	que := fmt.Sprintf(`
 	SELECT Q.start_log_ids, Q.end_log_ids, Q.note
 	FROM question AS Q
-	WHERE Q.question_id < %d
+	WHERE Q.question_id > %d
 	`, lim)
 	rows, err := db.Query(que)
 	if err != nil {
@@ -134,7 +134,7 @@ func insertData(stmt *sql.Stmt, data Data) {
 
 func main() {
 	// umigamelogのコネクションを開く
-	db, err := sql.Open("sqlite3", "umigamelog.sqlite")
+	db, err := sql.Open("sqlite3", "../log.db")
 	if err != nil {
 		panic(err)
 	}
@@ -154,7 +154,7 @@ func main() {
 	}
 
 	// qのデータベースのコネクションを開く
-	db2, err := sql.Open("sqlite3", "q.db")
+	db2, err := sql.Open("sqlite3", "../q.db")
 	if err != nil {
 		panic(err)
 	}
@@ -171,6 +171,7 @@ func main() {
 	for _, se := range ses {
 		data := formatData(se)
 		insertData(stmt, data)
+		fmt.Print(data)
 	}
 	tx.Commit()
 }
