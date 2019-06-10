@@ -5,22 +5,22 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"regexp"
+	"strconv"
 	//"strings"
 )
 
 // Data ...
 type Question struct {
-	TID    string
-	Res    string
-	Note   string
+	TID  string
+	Res  string
+	Note string
 }
 
-//// Q ...
-//type Q struct {
-//	Sta  string
-//	End  string
-//	Note string
-//}
+// Q ...
+type STAEND struct {
+	Sta string
+	End string
+}
 
 // q.dbから、thread_idとresとnoteを取得する
 func getQuestions(db *sql.DB) []Question {
@@ -41,8 +41,27 @@ func getQuestions(db *sql.DB) []Question {
 	return questions
 }
 
-// レスのlog_ids取得
-func getLIDs(db *sql.DB, tid string, res string, column string) string {
+// log.dbから、start_log_idsとend_log_idsを取得する
+func getOldSTAENDs(db *sql.DB) []STAEND {
+	que := fmt.Sprintf(`SELECT start_log_ids, end_log_ids FROM question`)
+	rows, err := db.Query(que)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	oldSTAENDs := []STAEND{}
+	for rows.Next() {
+		t := STAEND{}
+		rows.Scan(&t.Sta, &t.End)
+		oldSTAENDs = append(oldSTAENDs, t)
+	}
+
+	return oldSTAENDs
+}
+
+// レスのlog_id取得
+func getLID(db *sql.DB, tid string, res string, column string) string {
 	// logからlog_idを取得
 	que := fmt.Sprintf(`
 	SELECT log_id FROM log
@@ -52,14 +71,29 @@ func getLIDs(db *sql.DB, tid string, res string, column string) string {
 	LID := ""
 	row.Scan(&LID)
 
-	// log_idsが複数ある場合は、差分でlog_idsを生成
-
-
 	return LID
 }
 
+func calcDiff(idstring string) []int {
+	// log_idsの差分数値の配列を作成
+	ns := []int{}
+	rep := regexp.MustCompile(`\s*,\s*`)
+	ids := rep.Split(idstring, -1)
+	for i, _ := range ids {
+		if i == 0 {
+			ns = append(ns, 0)
+			continue
+		}
+		origin, _ := strconv.Atoi(ids[0])
+		n, _ := strconv.Atoi(ids[i])
+		ns = append(ns, n-origin)
+	}
+
+	return ns
+}
+
 // 問題と解説のlog_idを取得する
-func getSTAENDs(db *sql.DB, q Question) string {
+func getSTAENDs(db *sql.DB, q Question, o STAEND) STAEND {
 	// 問題レス番と解説レス番を取得
 	rep := regexp.MustCompile(`\s*-\s*`)
 	res := rep.Split(q.Res, -1)
@@ -67,17 +101,44 @@ func getSTAENDs(db *sql.DB, q Question) string {
 	// 問題レスのlog_id取得
 	sta := getLID(db, q.TID, res[0], "start_log_ids")
 
+	// log_idsが複数ある場合は、差分でlog_idsを生成
+	diffsta := calcDiff(o.Sta)
+	stas := ""
+	originsta, _ := strconv.Atoi(sta)
+	for i, diff := range diffsta {
+		t := strconv.Itoa(originsta + diff)
+		stas += t
+		if i != len(diffsta)-1 {
+			stas += ","
+		}
+	}
+	fmt.Print(diffsta)
+
 	// mikaiketsuじゃなければ、解説レスのlog_id取得
-	end := ""
+	ends := ""
 	if q.Note != "mikaiketsu" && q.Note != "mikaiketsu " {
-		end = getLID(db, q.TID, res[1], "end_log_ids")
-		fmt.Print(end)
+		end := getLID(db, q.TID, res[1], "end_log_ids")
+
+		// log_idsが複数ある場合は、差分でlog_idsを生成
+		diffend := calcDiff(o.End)
+		fmt.Print(diffend)
+		originend, _ := strconv.Atoi(end)
+		for i := len(diffend) - 1; i >= 0; i-- {
+			t := strconv.Itoa(originend - diffend[i])
+			ends += t
+			if i != 0 {
+				ends += ","
+			}
+		}
 	}
 
-	// start_log_idsが複数ある場合は、差分でstart_log_idsを生成
-	// end_log_idsが複数ある場合は、差分でend_log_idsを生成
+	staend := STAEND{stas, ends}
+	return staend
+}
 
-	return sta
+// questionにstart_log_idsとend_log_idsとnoteを入れる
+func updateLIDs(db *sql.DB, old STAEND, lids STAEND, note string) {
+
 }
 
 // log.dbのquestionのidを振り直す
@@ -95,13 +156,16 @@ func main() {
 	// q.dbから、thread_idとresとnoteを取得する
 	questions := getQuestions(qdb)
 
+	// log.dbから、start_log_idsとend_log_idsを取得する
+	oldSTAENDs := getOldSTAENDs(logdb)
+
 	// 問題の配列でループ
-	for _, question := range questions {
+	for i, _ := range questions {
 		// 問題と解説のlog_idを取得する
-		LIDs := getSTAENDs(logdb, question)
+		LIDs := getSTAENDs(logdb, questions[i], oldSTAENDs[i])
 		// questionにstart_log_idsとend_log_idsとnoteを入れる
-		fmt.Print(question)
-		fmt.Print(LIDs)
-		fmt.Print("\n")
+		updateLIDs(logdb, oldSTAENDs[i], LIDs, questions[i].Note)
+		fmt.Print(questions[i])
+		fmt.Println(LIDs)
 	}
 }

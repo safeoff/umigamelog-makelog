@@ -2,14 +2,14 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"html"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
-	"html"
-	"flag"
 )
 
 // Data ...
@@ -53,7 +53,7 @@ func selectThread(db *sql.DB, threadType string, tID string) string {
 	SELECT thread
 	FROM thread
 	WHERE thread_id = "%s"
-	`, threadType + tID)
+	`, threadType+tID)
 	row := db.QueryRow(que)
 
 	// logをリストにする
@@ -68,7 +68,7 @@ func selectLog(db *sql.DB, threadType string, tID string) []Log {
     SELECT log_id, handle, mail, datetime, id, body
     FROM log
     WHERE thread_id = "%s"
-	`, threadType + tID)
+	`, threadType+tID)
 	rows, err := db.Query(que)
 	if err != nil {
 		panic(err)
@@ -215,8 +215,8 @@ func writeMD(threadType string, tID string, thread string, date string) {
 	t, _ := strconv.Atoi(tID)
 	be := threadType + strconv.Itoa(t-1)
 	af := threadType + strconv.Itoa(t+1)
-	threadTypeMap := map[string]string {
-		"": "オカルト板",
+	threadTypeMap := map[string]string{
+		"":  "オカルト板",
 		"m": "マラソン",
 		"y": "闇鍋",
 		"t": "遠山スレ",
