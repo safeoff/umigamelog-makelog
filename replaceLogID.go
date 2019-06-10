@@ -18,6 +18,7 @@ type Question struct {
 
 // Q ...
 type STAEND struct {
+	QID int
 	Sta string
 	End string
 }
@@ -43,7 +44,7 @@ func getQuestions(db *sql.DB) []Question {
 
 // log.dbから、start_log_idsとend_log_idsを取得する
 func getOldSTAENDs(db *sql.DB) []STAEND {
-	que := fmt.Sprintf(`SELECT start_log_ids, end_log_ids FROM question`)
+	que := fmt.Sprintf(`SELECT question_id, start_log_ids, end_log_ids FROM question`)
 	rows, err := db.Query(que)
 	if err != nil {
 		panic(err)
@@ -53,7 +54,7 @@ func getOldSTAENDs(db *sql.DB) []STAEND {
 	oldSTAENDs := []STAEND{}
 	for rows.Next() {
 		t := STAEND{}
-		rows.Scan(&t.Sta, &t.End)
+		rows.Scan(&t.QID, &t.Sta, &t.End)
 		oldSTAENDs = append(oldSTAENDs, t)
 	}
 
@@ -132,13 +133,13 @@ func getSTAENDs(db *sql.DB, q Question, o STAEND) STAEND {
 		}
 	}
 
-	staend := STAEND{stas, ends}
+	staend := STAEND{0, stas, ends}
 	return staend
 }
 
 // questionにstart_log_idsとend_log_idsとnoteを入れる
 func updateLIDs(db *sql.DB, old STAEND, lids STAEND, note string) {
-
+	fmt.Print(old.QID)
 }
 
 // log.dbのquestionのidを振り直す
