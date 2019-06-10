@@ -41,27 +41,43 @@ func getQuestions(db *sql.DB) []Question {
 	return questions
 }
 
-// log.dbをthread_idとresで検索する
+// レスのlog_ids取得
+func getLIDs(db *sql.DB, tid string, res string, column string) string {
+	// logからlog_idを取得
+	que := fmt.Sprintf(`
+	SELECT log_id FROM log
+	WHERE thread_id="%s" AND responce_num=%s
+	`, tid, res)
+	row := db.QueryRow(que)
+	LID := ""
+	row.Scan(&LID)
+
+	// log_idsが複数ある場合は、差分でlog_idsを生成
+
+
+	return LID
+}
+
 // 問題と解説のlog_idを取得する
-func getLIDs(db *sql.DB, q Question) string {
+func getSTAENDs(db *sql.DB, q Question) string {
 	// 問題レス番と解説レス番を取得
 	rep := regexp.MustCompile(`\s*-\s*`)
 	res := rep.Split(q.Res, -1)
 
-	// 問題レス（1個め）の
+	// 問題レスのlog_id取得
+	sta := getLID(db, q.TID, res[0], "start_log_ids")
 
-	que := fmt.Sprintf(`
-	SELECT log_id FROM log
-	WHERE thread_id="%s" AND responce_num=%s
-	`, q.TID, res[0])
-	row := db.QueryRow(que)
+	// mikaiketsuじゃなければ、解説レスのlog_id取得
+	end := ""
+	if q.Note != "mikaiketsu" && q.Note != "mikaiketsu " {
+		end = getLID(db, q.TID, res[1], "end_log_ids")
+		fmt.Print(end)
+	}
 
-	LID := ""
-	row.Scan(&LID)
-	return LID
+	// start_log_idsが複数ある場合は、差分でstart_log_idsを生成
+	// end_log_idsが複数ある場合は、差分でend_log_idsを生成
 
-	// start_log_idsが複数あるか？
-	// end_log_idsが複数あるか？
+	return sta
 }
 
 // log.dbのquestionのidを振り直す
@@ -81,10 +97,8 @@ func main() {
 
 	// 問題の配列でループ
 	for _, question := range questions {
-		// log.dbをthread_idとresで検索する
 		// 問題と解説のlog_idを取得する
-		LIDs := getLIDs(logdb, question)
-		// questionからstart_log_idsとend_log_idsを取得する
+		LIDs := getSTAENDs(logdb, question)
 		// questionにstart_log_idsとend_log_idsとnoteを入れる
 		fmt.Print(question)
 		fmt.Print(LIDs)
