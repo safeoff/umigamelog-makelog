@@ -113,7 +113,6 @@ func getSTAENDs(db *sql.DB, q Question, o STAEND) STAEND {
 			stas += ","
 		}
 	}
-	fmt.Print(diffsta)
 
 	// mikaiketsuじゃなければ、解説レスのlog_id取得
 	ends := ""
@@ -122,7 +121,6 @@ func getSTAENDs(db *sql.DB, q Question, o STAEND) STAEND {
 
 		// log_idsが複数ある場合は、差分でlog_idsを生成
 		diffend := calcDiff(o.End)
-		fmt.Print(diffend)
 		originend, _ := strconv.Atoi(end)
 		for i := len(diffend) - 1; i >= 0; i-- {
 			t := strconv.Itoa(originend - diffend[i])
@@ -139,7 +137,16 @@ func getSTAENDs(db *sql.DB, q Question, o STAEND) STAEND {
 
 // questionにstart_log_idsとend_log_idsとnoteを入れる
 func updateLIDs(db *sql.DB, old STAEND, lids STAEND, note string) {
+	_, err := db.Exec(`
+	UPDATE question 
+	SET start_log_ids=?, end_log_ids=?
+	WHERE question_id=?
+	`, lids.Sta, lids.End, old.QID)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Print(old.QID)
+	fmt.Print(" ")
 }
 
 // log.dbのquestionのidを振り直す
@@ -166,7 +173,5 @@ func main() {
 		LIDs := getSTAENDs(logdb, questions[i], oldSTAENDs[i])
 		// questionにstart_log_idsとend_log_idsとnoteを入れる
 		updateLIDs(logdb, oldSTAENDs[i], LIDs, questions[i].Note)
-		fmt.Print(questions[i])
-		fmt.Println(LIDs)
 	}
 }
