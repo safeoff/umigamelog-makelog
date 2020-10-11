@@ -238,13 +238,13 @@ func writeMD(threadType string, tID string, thread string, date string) {
 		"\n{{< " + threadType + tID + " >}}" +
 		"\n<div class=\"th_left\"><a href=\"../" + be + "\"><< " + be + "</a></div>" +
 		"\n<div class=\"th_right\"><a href=\"../" + af + "\">" + af + " >></a></div>"
-	f, _ := os.Create("../umigamelog-hugo/content/posts/" + threadType + tID + ".md")
+	f, _ := os.Create("../hugo-umigamelog/content/posts/" + threadType + tID + ".md")
 	defer f.Close()
 	f.Write(([]byte)(s))
 }
 
 func writeHTML(threadType string, tID string, body string) {
-	f, _ := os.Create("../umigamelog-hugo/layouts/shortcodes/" + threadType + tID + ".html")
+	f, _ := os.Create("../hugo-umigamelog/layouts/shortcodes/" + threadType + tID + ".html")
 	//f, _ := os.Create(tID + ".html")
 	defer f.Close()
 	f.Write(([]byte)(body))
