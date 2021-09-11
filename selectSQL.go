@@ -40,15 +40,36 @@ func selectSQL(req Req) (Res, error) {
 	}
 
 	// 複数レコード取得
+    opp := ""
+    if req.Op == "and" {
+        opp = "and"
+    } else if req.Op == "or" {
+        opp = "or"
+    } else {
+        panic(err)
+    }
+	//s := "SELECT tID, handle, date, res, qBody, aBody, note FROM q WHERE "
+	//qs := strings.Fields(req.Q)
+	//s += "(tID || handle || qBody || aBody || note) like '%" + qs[0] + "%' "
+	//for _, q := range qs {
+	//	s += opp + "(tID || handle || qBody || aBody || note) like '%" + q + "%' "
+	//}
+	//s += " ORDER BY date DESC LIMIT 1000"
 	s := "SELECT tID, handle, date, res, qBody, aBody, note FROM q WHERE "
 	qs := strings.Fields(req.Q)
-	s += "(tID || handle || qBody || aBody || note) like '%" + qs[0] + "%' "
+	s += "(tID || handle || qBody || aBody || note) like ? "
 	for _, q := range qs {
-		s += req.Op + "(tID || handle || qBody || aBody || note) like '%" + q + "%' "
+		s += opp + "(tID || handle || qBody || aBody || note) like ? "
+        _ = q
 	}
 	s += " ORDER BY date DESC LIMIT 1000"
 
-	rows, err := db.Query(s)
+    tmp := make([]interface{}, len(qs)+1)
+    tmp[0] = "%" + qs[0] + "%"
+    for i, v := range qs {
+        tmp[i+1] = "%" + v + "%"
+    }
+	rows, err := db.Query(s, tmp...)
 	if err != nil {
 		panic(err)
 	}
