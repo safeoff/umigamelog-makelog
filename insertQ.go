@@ -43,7 +43,7 @@ type Q struct {
 
 func selectQs(db *sql.DB) []Q {
 	// 問題のidsを取得
-	lim := 15913
+	lim := 0
 	que := fmt.Sprintf(`
 	SELECT Q.start_log_ids, Q.end_log_ids, Q.note
 	FROM question AS Q
@@ -162,16 +162,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	// qを全消去
+	db2.Exec("DELETE FROM q")
+	db2.Exec("DELETE FROM sqlite_sequence WHERE name = 'q'")
+	// 問題を収録
 	que := `INSERT INTO q (tID, handle, date, res, qBody, aBody, note) VALUES (?, ?, ?, ?, ?, ?, ?)`
 	stmt, err := tx.Prepare(que)
 	if err != nil {
 		panic(err)
 	}
-	// 問題を収録
 	for _, se := range ses {
 		data := formatData(se)
 		insertData(stmt, data)
-		fmt.Print(data)
+		// fmt.Print(data)
 	}
 	tx.Commit()
 }
